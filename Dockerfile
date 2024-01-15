@@ -1,10 +1,13 @@
 FROM rust:alpine as builder
 
-RUN apk add musl-dev
+RUN apk add musl-dev clang
 WORKDIR /builder
 COPY . .
 
-RUN RUSTFLAGS="-C link-args=-s" cargo build --release
+RUN CC="clang" \
+    CXX="clang" \
+    RUSTFLAGS="-C link-args=-s" \
+    cargo build --release
 
 FROM alpine:latest
 
